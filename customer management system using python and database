@@ -1,0 +1,474 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Mar 31 18:50:46 2020
+
+@author: Abhinash
+"""
+#run port from xampp server mysql and apache
+
+import pymysql
+conn=pymysql.connect('localhost','root','','cms')
+cur=conn.cursor()
+
+while(True):
+    print("-"*60)
+    print(" @@@@@@@@  Welcome To Course Management System @@@@@@@@ ")
+    print("-"*60)
+    print()
+    print("-------1:ADD Customer 2:MODIFY Customer-------")
+    print("-------3:DEL Customer 4:Display Customer-------")
+    print(" ")
+    ch=int(input("Enter Choice :"))
+    if(ch==1):
+        idd=int(input("Enter New Id :"))
+        name=str(input("Enter Name :"))
+        cor=str(input("Enter Course :"))
+        mob=str(input("Enter Mobile Number :"))
+        fees=int(input("Enter Course Fees :"))
+        q="insert into data(id,name,course,mob,fees) values(%s,%s,%s,%s,%s)"
+        val=(idd,name,cor,mob,fees)
+        cur.execute(q,val)
+        conn.commit()
+        print("--------Customer Added Sucessfully-------------------")
+        print()
+    elif(ch==2):
+        idd=int(input("Enter Cutomer ID :"))
+        i_find=(idd,)
+        li=[]
+        q="select id from data"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        if i_find in li :
+            name=str(input("Enter New Name :"))
+            cor=str(input("Enter Change Course :"))
+            mob=str(input("Enter Mod Mobile :"))
+            fees=int(input("Enter New Fees :"))
+            q="update data set name=%s,course=%s,mob=%s,fees=%s where id=%s"#error
+            val=(name,cor,mob,fees,i_find[0])
+            cur.execute(q,val)
+            conn.commit()
+            print("-----------------Data Modify of Customer is Sucessfully --------------")
+            print()
+        else:
+            print("Id Not Present In DataBase")
+    elif(ch==3):
+        idd=int(input("Enter Cutomer ID :"))
+        i_find=(idd,)
+        li=[]
+        q="select id from data"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        if i_find in li :
+            q="delete from data where id=%s"
+            val=i_find[0]
+            cur.execute(q,val)
+            conn.commit()
+            print("Account DELETED SUCESSFULLY")
+            print()
+        else:
+            print("Id Not Present In DataBase")
+            print()
+    elif(ch==4):
+         idd=int(input("Enter Cutomer ID :"))
+         i_find=(idd,)
+         li=[]
+         q="select id from data"
+         cur.execute(q)
+         for i in cur:
+             li.append(i)
+         if i_find in li :
+             Data=[]
+             q="select * from data where id=%s"
+             val=i_find[0]
+             cur.execute(q,val)
+             for i in cur:
+                 Data.append(i)
+                 d=Data[0]
+                 #print("Id of customer is :",d[0])
+                 print("Name of customer is :",d[1])
+                 print("Course is :",d[2])
+                 print("Mobile is :",d[3])
+                 print("Fees is :",d[4])
+             conn.commit()
+             print()
+         else:
+             print("Id Not Present In DataBase")
+
+    elif(ch==5):
+        conn.close()
+        break
+    else:
+        print("Invalid choice")
+
+
+###############################################################################################
+python batch 12-2
+class start 12:05
+#management system using database
+
+
+import pymysql
+conn=pymysql.connect('localhost','root','','weekpython')
+cur=conn.cursor()
+while(True):
+    print("----------Student Management System Using Database----------")
+    print(" ")
+    print("--------------Select Any Choice Mention Below---------------")
+    print(" ")
+    print("1:Add Detail 2:Modify Detail 3:Del Detail 4:Show Detail 5:Exit")
+    #fess manipulate
+    ch=int(input("Enter choice :---> "))
+    if(ch==1):
+        print("-------------Process to Enter New Data Started-------------")
+        i=str(input("Enter Student Id:-->: "))
+        n=str(input("Enter Student Name:-->: "))
+        m=str(input("Enter Student Mob:-->: "))
+        c=str(input("Enter Student Course:-->: "))
+        f=float(input("Enter Student Fess:-->: "))
+        #create query to add
+        q="insert into sms values(%s,%s,%s,%s,%s)"
+        val=(i,n,m,c,f)
+        cur.execute(q,val)
+        conn.commit()
+        print(" ")
+        print("*****************Detail Added Sucessfully****************")
+        print("--------------Process End----------------------")
+        print(" ")
+    elif(ch==2):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            while(True):
+                print("----------Choice To Change--------")
+                print("1:name 2:Mob_no 3:course 4:fess 5:Exit")
+                c=int(input("Enter Choice:--> "))
+                if(c==1):
+                    i=str(input("Enter Student Id:--> "))
+                    nn=str(input("Enter Name :--> "))
+                    q="update sms set name=%s where student_id=%s"
+                    val=(nn,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Name Modified Sucessfully------")
+                elif(c==2):
+                    nm=str(input("Enter Mob :--> "))
+                    q="update sms set mobile=%s where student_id=%s"
+                    val=(nm,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Contact Modified Sucessfully------")
+                elif(c==3):
+                    nc=str(input("Enter Modify Course :--> "))
+                    q="update sms set course=%s where student_id=%s"
+                    val=(nc,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Course Modified Sucessfully------")
+                elif(c==4):
+                    nf=float(input("Enter Modify fess :--> "))
+                    q="update sms set fees=%s where student_id=%s"
+                    val=(nf,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Fess Modified Sucessfully------")
+                elif(c==5):
+                    print("Modification process end")
+                    print(" ")
+                    break
+                else:
+                    print("Enter choice as mention")
+        else:
+            print("ID not Found in Database")
+    elif(ch==3):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            q="delete from sms where student_id=%s"
+            val=(i)
+            cur.execute(q,val)
+            conn.commit()
+        else:
+            print("Id not found in database")
+    elif(ch==4):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            q="select * from sms where student_id=%s"
+            val=(i)
+            cur.execute(q,val)
+            data_ref=[]
+            for i in cur:
+                data_ref.append(i)
+            #data_ref=[('student_id','name',mob','co'.fees),(),()]
+            reff=data_ref[0]
+            #ref tuple contain all data
+            print("***********STUDENT INFO******************")
+            print("Student Id is :",reff[0])
+            print("Name of student is :",reff[1])
+            print("MOB NO of student is :",reff[2])
+            print("Course enrolled in is :",reff[3])
+            print("Course Fees is :",reff[4])
+            print("-------------------------------------------")
+            print(" ")
+        else:
+            print("ID NOT IN DATABASE")
+    elif(ch==5):
+        print("Program end")
+        conn.close()
+        break
+    else:
+        print("Enter Choice as Mention Above")
+        
+
+##################################################
+#exception handling-or exception error handling
+#if we do not follow python protocol--we meet with syntx error
+#like this
+if=100
+#keyword to define value 
+#error sytnx
+#indentation block error
+
+#exceptional error
+#when the program is correct acc to python protocol
+ind=int(input("Enter Index"))
+a=[1,2,3,4,5]
+print(a[ind])
+#IndexError: list index out of range is a type of exceptional error
+
+val1=int(input("Enter Number"))
+val2=int(input("Enter Number"))
+print(val1/val2)
+#ZeroDivisionError: division by zero:execptional error
+
+#handle use python execption handling
+use keyword in block form--try,except,else,finally
+block---
+try:
+    process
+except:
+    process error handle
+else:
+    task
+finally:
+    statement
+    
+#use try-except
+try:
+    val1=int(input("Enter Number"))
+    val2=int(input("Enter Number"))
+    print(val1/val2)
+except:
+    print("ZeroDivisionError: val2 cannot be zero")
+                    
+    #modify database managment progrm with try-except
+import pymysql
+conn=pymysql.connect('localhost','root','','weekpython')
+cur=conn.cursor()
+while(True):
+    print("----------Student Management System Using Database----------")
+    print(" ")
+    print("--------------Select Any Choice Mention Below---------------")
+    print(" ")
+    print("1:Add Detail 2:Modify Detail 3:Del Detail 4:Show Detail 5:Exit")
+    #fess manipulate
+    ch=int(input("Enter choice :---> "))
+    if(ch==1):
+        print("-------------Process to Enter New Data Started-------------")
+        try:
+            i=str(input("Enter Student Id:-->: "))
+            n=str(input("Enter Student Name:-->: "))
+            m=str(input("Enter Student Mob:-->: "))
+            c=str(input("Enter Student Course:-->: "))
+            f=float(input("Enter Student Fess:-->: "))
+            #create query to add
+            q="insert into sms values(%s,%s,%s,%s,%s)"
+            val=(i,n,m,c,f)
+            cur.execute(q,val)
+            conn.commit()
+            print(" ")
+            print("*****************Detail Added Sucessfully****************")
+            print("--------------Process End----------------------")
+            print(" ")
+        except:
+            print("ID already exist")
+    elif(ch==2):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            while(True):
+                print("----------Choice To Change--------")
+                print("1:name 2:Mob_no 3:course 4:fess 5:Exit")
+                c=int(input("Enter Choice:--> "))
+                if(c==1):
+                    i=str(input("Enter Student Id:--> "))
+                    nn=str(input("Enter Name :--> "))
+                    q="update sms set name=%s where student_id=%s"
+                    val=(nn,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Name Modified Sucessfully------")
+                elif(c==2):
+                    nm=str(input("Enter Mob :--> "))
+                    q="update sms set mobile=%s where student_id=%s"
+                    val=(nm,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Contact Modified Sucessfully------")
+                elif(c==3):
+                    nc=str(input("Enter Modify Course :--> "))
+                    q="update sms set course=%s where student_id=%s"
+                    val=(nc,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Course Modified Sucessfully------")
+                elif(c==4):
+                    nf=float(input("Enter Modify fess :--> "))
+                    q="update sms set fees=%s where student_id=%s"
+                    val=(nf,i)
+                    cur.execute(q,val)
+                    conn.commit()
+                    print("----Fess Modified Sucessfully------")
+                elif(c==5):
+                    print("Modification process end")
+                    print(" ")
+                    break
+                else:
+                    print("Enter choice as mention")
+        else:
+            print("ID not Found in Database")
+    elif(ch==3):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            q="delete from sms where student_id=%s"
+            val=(i)
+            cur.execute(q,val)
+            conn.commit()
+        else:
+            print("Id not found in database")
+    elif(ch==4):
+        #ref list for ID
+        li=[]
+        #selet data from single col
+        q="select student_id from sms"
+        cur.execute(q)
+        for i in cur:
+            li.append(i)
+        i=str(input("Enter Student Id:--> "))
+        if((i,) in li):
+            q="select * from sms where student_id=%s"
+            val=(i)
+            cur.execute(q,val)
+            data_ref=[]
+            for i in cur:
+                data_ref.append(i)
+            #data_ref=[('student_id','name',mob','co'.fees),(),()]
+            reff=data_ref[0]
+            #ref tuple contain all data
+            print("***********STUDENT INFO******************")
+            print("Student Id is :",reff[0])
+            print("Name of student is :",reff[1])
+            print("MOB NO of student is :",reff[2])
+            print("Course enrolled in is :",reff[3])
+            print("Course Fees is :",reff[4])
+            print("-------------------------------------------")
+            print(" ")
+        else:
+            print("ID NOT IN DATABASE")
+    elif(ch==5):
+        print("Program end")
+        conn.close()
+        break
+    else:
+        print("Enter Choice as Mention Above")
+        
+
+#python -is oops type language
+    #object oriented programming language
+    # we are more focus on data rather than logic
+    #the approch is bottom to top
+    #pillar of oop-
+    #a)Inheritance
+    #b)Polymorphism
+    #c)Abstraction
+    #d)Encapsulation
+    
+#class and object
+
+#class --we may term class as a blue print from which we can create 
+    #single or multiple objects
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

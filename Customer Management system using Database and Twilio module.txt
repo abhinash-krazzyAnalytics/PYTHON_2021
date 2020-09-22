@@ -1,7 +1,7 @@
 
 #Console Based Project: 
 #CMS(customer management system)
-#requirement: python/Database
+#requirement: python/Database/twilio module/twilio account
 
 #DATA ADD/DATA DEL/DATA UPDATE/SHOW(record)
 #CMS: FUNCTIONALITY

@@ -1,0 +1,153 @@
+
+#Console Based Project: 
+#CMS(customer management system)
+#requirement: python/Database
+
+#DATA ADD/DATA DEL/DATA UPDATE/SHOW(record)
+#CMS: FUNCTIONALITY
+#1) NEW CUSTOMER ADD
+#2) Modification(peronal detail)
+#3) Delete(record)
+#4) Details show
+
+#sever used Xampp 
+
+
+
+import random
+import pymysql
+from twilio.rest import Client
+account_sid ="************TWILIO MODULE TO GRAB IT***********************"
+auth_token ="*******TWILIO MODULE TO GRAB YOUR TOKEN"
+verify=Client(account_sid, auth_token)
+conn=pymysql.connect('localhost','root','',
+                         'mirzapur2')
+cur=conn.cursor()
+    
+def add_customer(n,m,c):
+    var=random.randint(111,999)
+    Id="PR"+str(var)
+    q="insert into cms values (%s,%s,%s,%s)"
+    val=(Id,n,m,c)
+    cur.execute(q,val)
+    conn.commit()
+    message = verify.messages.create(
+           body="Customer Id Generated Is:"+str(Id),
+           from_='Twilio trial number',
+          to='Register mob number')
+    print(message.sid)
+    print("Genterated ID is :",Id)
+    print("NEW DATA ADDED SUCESSFULLY")
+    
+
+def modify_customer(Id):
+    comp=[]
+    q="select custid from cms"
+    cur.execute(q)
+    for i in cur:
+        comp.append(i[0])
+    #check weather the person is in the database
+    if Id in comp:
+        #modification
+        while(True):
+            print("--------Welcome To Modification Process------")
+            print(" ")
+            print("Select Your Choice of modification:")
+            print("1: Name 2:Contact 3:Course 4:Exit")
+            md=int(input("Enter Choice :"))
+            if(md==1):
+                nn=str(input("Enter modify Name :"))
+                q="update cms set name=%s where custid=%s"
+                val=(nn,Id)
+                cur.execute(q,val)
+                conn.commit()
+                print("Modification Done")
+            elif(md==2):
+                mob=int(input("Enter New number :"))
+                q="update cms set phone=%s where custid=%s"
+                val=(mob,Id)
+                cur.execute(q,val)
+                conn.commit()
+                print("Modification Done")
+            elif(md==3):
+                nc=str(input("Enter Course :"))
+                q="update cms set service=%s where custid=%s"
+                val=(nc,Id)
+                cur.execute(q,val)
+                conn.commit()
+                print("Modification Done")
+            elif(md==4):
+                break
+    else:
+        print("Id Does not exist")
+            
+def Del_customer(Id):
+    comp=[]
+    q="select custid from cms"
+    cur.execute(q)
+    for i in cur:
+        comp.append(i[0])
+    #check weather the person is in the database
+    if Id in comp:
+        q="delete from cms where custid=%s"
+        val=(Id)
+        cur.execute(q,val)
+        conn.commit()
+        print("Data Deleted Sucessfully")
+    else:
+        print("ID not found")
+
+def show_customer(Id):
+    comp=[]
+    q="select custid from cms"
+    cur.execute(q)
+    for i in cur:
+        comp.append(i[0])
+    #check weather the person is in the database
+    if Id in comp:
+        q="select * from cms where custid=%s"
+        val=(Id)
+        cur.execute(q,val)
+        for i in cur:
+            print(" ")
+            print("::=====================================::")
+            print("    ID of customer is :",i[0])
+            print("    Name of customer is :",i[1])
+            print("    Mobile Of customer is:",i[2])
+            print("    Service used by customer is :",i[3])
+            print(" ")
+            print("::======================================::")
+    else:
+        print("ID NOT FOUND")
+
+        
+#PL--------------------------------------------------
+while(True):
+    print("------------Welcome To CMS System-------------")
+    print(" 1: Add Customer 2: Modify Customer 3: DEL Customer 4: Show Detail 5:Exit")
+    print(" ")
+    ch=int(input("Enter Choice as Mention Above:"))
+    if(ch==1):
+        n=str(input("Enter Name :"))
+        mob=int(input("Enter Mob :"))
+        refc={1:"Python",2:"ML",3:"DS"}
+        print(refc)
+        c=int(input("select Course :"))
+        refval=refc[c]
+        add_customer(n,mob,refval)
+    elif(ch==2):
+        Id=str(input("Enter ID :"))
+        modify_customer(Id)
+    elif(ch==3):
+        Id=str(input("Enter ID :"))
+        Del_customer(Id)
+    elif(ch==4):
+        Id=str(input("Enter ID :"))
+        show_customer(Id)
+    elif(ch==5):
+        break
+    else:
+        print("Enter a valid Choice")
+        
+        
+#------------------------------------------    
